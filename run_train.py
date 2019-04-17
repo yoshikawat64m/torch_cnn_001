@@ -52,7 +52,7 @@ save_model_path = 'model/cnn.model'
 model_name = 'vgg16'
 num_classes = 10
 
-run_type = 'cpu'
+run_type = 'cuda' if torch.cuda.is_available() else 'cpu'
 
 train_set = MyDataset(label_file, dataset_dir)
 train_loader = torch.utils.data.DataLoader(train_set, batch_size=batch_size, shuffle=True)
