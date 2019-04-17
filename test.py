@@ -22,9 +22,9 @@ dataset_dir = 'dataset/flower_images/'
 label_file= 'dataset/flower_images/flower_labels.csv'
 
 test_set = MyDataset(label_file, dataset_dir)
-test_loader = torch.utils.data.DataLoader(test_set, batch_size=1, shuffle=True)
+test_loader = torch.utils.data.DataLoader(test_set, batch_size=210, shuffle=True)
 
-model = make_model('vgg16', num_classes=10, input_size=(224, 224))
+model = make_model('inception_v3', num_classes=10, input_size=(224, 224))
 param = torch.load('model/cnn_dict.model')
 model.load_state_dict(param)
 

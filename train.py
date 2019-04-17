@@ -46,14 +46,14 @@ label_file= 'dataset/flower_images/flower_labels.csv'
 train_set = MyDataset(label_file, dataset_dir)
 train_loader = torch.utils.data.DataLoader(train_set, batch_size=70, shuffle=True)
 
-model = make_model('vgg16', num_classes=10, pretrained=True, input_size=(224, 224))
+model = make_model('inception_v3', num_classes=10, pretrained=True, input_size=(224, 224))
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 model = model.to(device)
 
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters())
 
-num_epochs = 300
+num_epochs = 30
 for epoch in range(1, num_epochs + 1):
     train(epoch)
 
