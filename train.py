@@ -42,33 +42,24 @@ def train(epoch):
                 100. * batch_idx / len(train_loader), total_loss / total_size))
 
 
-num_epochs = 10
-batch_size = 32
-
 dataset_dir = 'dataset/flower_images/'
 label_file= 'dataset/flower_images/flower_labels.csv'
 
 save_model_path = 'model/cnn.model'
 
-model_name = 'vgg16'
-num_classes = 10
-
-run_type = 'cuda' if torch.cuda.is_available() else 'cpu'
-
 train_set = MyDataset(label_file, dataset_dir)
-train_loader = torch.utils.data.DataLoader(train_set, batch_size=batch_size, shuffle=True)
+train_loader = torch.utils.data.DataLoader(train_set, batch_size=32, shuffle=True)
 
-model = make_model(model_name, num_classes=num_classes, pretrained=True, input_size=(224, 224))
-
-device = torch.device(run_type)
+model = make_model('vgg16', num_classes=10, pretrained=True, input_size=(224, 224))
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 model = model.to(device)
 
 criterion = nn.CrossEntropyLoss()
-
 optimizer = optim.Adam(model.parameters())
 
+num_epochs = 10
 for epoch in range(1, num_epochs + 1):
     train(epoch)
 
-#torch.save(model.state_dict(), 'model/cnn_dict.model')
+torch.save(model.state_dict(), 'model/cnn_dict.model')
 torch.save(model, save_model_path)
