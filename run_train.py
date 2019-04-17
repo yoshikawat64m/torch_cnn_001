@@ -16,8 +16,8 @@ from MyDataset import MyDataset
 def train(epoch):
     total_loss = 0
     total_size = 0
-    import pdb; pdb.set_trace()
-    
+    #import pdb; pdb.set_trace()
+
     model.train()
 
     for batch_idx, (data, target) in enumerate(train_loader):
