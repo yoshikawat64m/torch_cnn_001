@@ -6,16 +6,16 @@ from MyDataset import MyDataset
 
 
 def test():
-	model = model.eval()
-	pred = []
-	Y = []
-	for i, (x,y) in enumerate(test_loader):
-		with torch.no_grad():
-		    output = model(x)
-		pred += [int(l.argmax()) for l in output]
-		Y += [int(l) for l in y]
+    model = model.eval()
+    pred = []
+    Y = []
+    for i, (x,y) in enumerate(test_loader):
+        with torch.no_grad():
+            output = model(x)
+        pred += [int(l.argmax()) for l in output]
+        Y += [int(l) for l in y]
 
-    print(classification_report(Y, pred))
+        print(classification_report(Y, pred))
 
 
 dataset_dir = 'dataset/flower_images/'

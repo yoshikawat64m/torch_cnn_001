@@ -10,8 +10,7 @@ import datetime
 import matplotlib.pyplot as plt
 import os
 
-from MyDataset import MyDataset
-
+from MyDataset import MyDatasetSUBLIMELINTER
 
 def train(epoch):
     total_loss = 0
@@ -39,7 +38,7 @@ def train(epoch):
             print('[{}] Train Epoch: {} [{}/{} ({:.0f}%)]\tAverage loss: {:.6f}'.format(
                 now,
                 epoch, batch_idx * len(data), len(train_loader.dataset),
-                100. * batch_idx / len(train_loader), total_loss / total_size))
+                100 * batch_idx / len(train_loader), total_loss / total_size))
 
 
 dataset_dir = 'dataset/flower_images/'
