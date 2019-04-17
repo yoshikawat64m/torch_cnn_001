@@ -65,7 +65,7 @@ model = model.to(device)
 
 criterion = nn.CrossEntropyLoss()
 
-optimizer = optim.SGD(model.parameters(), lr=0.01, momentum=0.9)
+optimizer = optim.Adam(model.parameters())
 
 for epoch in range(1, num_epochs + 1):
     train(epoch)
