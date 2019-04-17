@@ -10,7 +10,7 @@ import datetime
 import matplotlib.pyplot as plt
 import os
 
-from MyDataset import MyDatasetSUBLIMELINTER
+from MyDataset import MyDataset
 
 def train(epoch):
     total_loss = 0
