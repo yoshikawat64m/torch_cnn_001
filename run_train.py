@@ -33,7 +33,8 @@ def train(epoch):
         loss.backward()
         optimizer.step()
 
-        if batch_idx % 1000 == 0:
+        #if batch_idx % 1000 == 0:
+        if True:
             now = datetime.datetime.now()
             print('[{}] Train Epoch: {} [{}/{} ({:.0f}%)]\tAverage loss: {:.6f}'.format(
                 now,
@@ -41,7 +42,7 @@ def train(epoch):
                 100. * batch_idx / len(train_loader), total_loss / total_size))
 
 
-num_epochs = 100
+num_epochs = 10
 batch_size = 32
 
 dataset_dir = 'dataset/flower_images/'
