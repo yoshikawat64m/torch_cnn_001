@@ -32,8 +32,7 @@ def train(epoch):
         loss.backward()
         optimizer.step()
 
-        #if batch_idx % 1000 == 0:
-        if True:
+        if batch_idx % 1000 == 0:
             now = datetime.datetime.now()
             print('[{}] Train Epoch: {} [{}/{} ({:.0f}%)]\tAverage loss: {:.6f}'.format(
                 now,
@@ -44,10 +43,8 @@ def train(epoch):
 dataset_dir = 'dataset/flower_images/'
 label_file= 'dataset/flower_images/flower_labels.csv'
 
-save_model_path = 'model/cnn.model'
-
 train_set = MyDataset(label_file, dataset_dir)
-train_loader = torch.utils.data.DataLoader(train_set, batch_size=32, shuffle=True)
+train_loader = torch.utils.data.DataLoader(train_set, batch_size=128, shuffle=True)
 
 model = make_model('vgg16', num_classes=10, pretrained=True, input_size=(224, 224))
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -61,4 +58,4 @@ for epoch in range(1, num_epochs + 1):
     train(epoch)
 
 torch.save(model.state_dict(), 'model/cnn_dict.model')
-torch.save(model, save_model_path)
+torch.save(model, 'model/cnn.model')
