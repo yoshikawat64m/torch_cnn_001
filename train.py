@@ -47,10 +47,11 @@ config = {
     'num_classes': 10,
     'batch_size': 70,
     'num_epochs':30,
-    'pretrained':True
+    'pretrained':True,
+    'input_size':229,
 }
 
-train_set = MyDataset(config['label_file'], config['dataset_dir'])
+train_set = MyDataset(config['label_file'], config['dataset_dir'], size=config['input_size'])
 train_loader = torch.utils.data.DataLoader(train_set, batch_size=config['batch_size'], shuffle=True)
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')

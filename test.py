@@ -23,9 +23,10 @@ config = {
     'label_file': 'dataset/flower_images/flower_labels.csv',
     'num_classes': 10,
     'batch_size': 70,
+    'input_size':229,
 }
 
-test_set = MyDataset(config['label_file'], config['dataset_dir'])
+test_set = MyDataset(config['label_file'], config['dataset_dir'],  size=config['input_size'])
 test_loader = DataLoader(test_set, batch_size=config['batch_size'], shuffle=True)
 
 #model = make_model('inception_v3', num_classes=config['num_classes'], input_size=(224, 224))
