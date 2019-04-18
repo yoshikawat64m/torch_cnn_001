@@ -47,7 +47,7 @@ config = {
     'num_classes': 10,
     'batch_size': 70,
     'num_epochs':30,
-    'pretrained':True,
+    'pretrained':False,
     'input_size':229,
 }
 
