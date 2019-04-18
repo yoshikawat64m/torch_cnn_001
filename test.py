@@ -1,5 +1,5 @@
 import torch
-import torch.utils.data.DataLoader as DataLoader
+from torch.utils.data import DataLoader
 from cnn_finetune import make_model
 from sklearn.metrics import classification_report
 import os
@@ -13,7 +13,7 @@ def test():
     for i, (x,y) in enumerate(test_loader):
         with torch.no_grad():
             output = model(x)
-        pred += [int(l.argmax()) for l in output[0]]
+        pred += [int(l.argmax()) for l in output]
         Y += [int(l) for l in y]
 
     print(classification_report(Y, pred))
@@ -23,7 +23,7 @@ config = {
     'label_file': 'dataset/flower_images/flower_labels.csv',
     'num_classes': 10,
     'batch_size': 70,
-    'input_size':229,
+    'input_size':299,
 }
 
 test_set = MyDataset(config['label_file'], config['dataset_dir'],  size=config['input_size'])
