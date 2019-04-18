@@ -50,7 +50,7 @@ config = {
     'pretrained':True
 }
 
-train_set = MyDataset(label_file, dataset_dir)
+train_set = MyDataset(config['label_file'], config['dataset_dir'])
 train_loader = torch.utils.data.DataLoader(train_set, batch_size=config['batch_size'], shuffle=True)
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
