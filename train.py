@@ -24,7 +24,7 @@ def train(epoch):
     for batch_idx, (data, target) in enumerate(train_loader):
         data, target = data.to(device), target.to(device)
 
-        output[0] = model(data)
+        output = model(data)
         loss = criterion(output[0], target)
 
         total_loss += loss.item()
