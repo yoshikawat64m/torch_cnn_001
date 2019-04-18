@@ -13,7 +13,7 @@ def test():
     for i, (x,y) in enumerate(test_loader):
         with torch.no_grad():
             output = model(x)
-        pred += [int(l.argmax()) for l in output]
+        pred += [int(l.argmax()) for l in output[0]]
         Y += [int(l) for l in y]
 
     print(classification_report(Y, pred))

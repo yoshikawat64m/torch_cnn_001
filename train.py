@@ -24,8 +24,8 @@ def train(epoch):
     for batch_idx, (data, target) in enumerate(train_loader):
         data, target = data.to(device), target.to(device)
 
-        output = model(data)
-        loss = criterion(output, target)
+        output[0] = model(data)
+        loss = criterion(output[0], target)
 
         total_loss += loss.item()
         total_size += data.size(0)
@@ -48,7 +48,7 @@ config = {
     'batch_size': 70,
     'num_epochs':30,
     'pretrained':False,
-    'input_size':229,
+    'input_size':299,
 }
 
 train_set = MyDataset(config['label_file'], config['dataset_dir'], size=config['input_size'])
