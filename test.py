@@ -25,9 +25,6 @@ config = {
     'batch_size': 70,
 }
 
-dataset_dir = 'dataset/flower_images/'
-label_file= 'dataset/flower_images/flower_labels.csv'
-
 test_set = MyDataset(config['label_file'], config['dataset_dir'])
 test_loader = DataLoader(test_set, batch_size=config['batch_size'], shuffle=True)
 
