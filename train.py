@@ -12,6 +12,8 @@ import os
 
 from MyDataset import MyDataset
 
+from inception import inception_v3
+
 def train(epoch):
     total_loss = 0
     total_size = 0
@@ -39,22 +41,30 @@ def train(epoch):
                 epoch, batch_idx * len(data), len(train_loader.dataset),
                 100 * batch_idx / len(train_loader), total_loss / total_size))
 
-
-dataset_dir = 'dataset/flower_images/'
-label_file= 'dataset/flower_images/flower_labels.csv'
+config = {
+    'dataset_dir': 'dataset/flower_images/',
+    'label_file': 'dataset/flower_images/flower_labels.csv',
+    'num_classes': 10,
+    'batch_size': 70,
+    'num_epochs':30,
+    'pretrained':True
+}
 
 train_set = MyDataset(label_file, dataset_dir)
-train_loader = torch.utils.data.DataLoader(train_set, batch_size=70, shuffle=True)
+train_loader = torch.utils.data.DataLoader(train_set, batch_size=config['batch_size'], shuffle=True)
 
-model = make_model('inception_v3', num_classes=10, pretrained=True, input_size=(224, 224))
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-model = model.to(device)
+
+#model = make_model('inception_v3', num_classes=10, pretrained=True, input_size=(224, 224))
+
+model = inception_v3(pretrained=config['pretrained'], 
+                     num_classes=config['num_classes'],
+                     transform_input=True).to(device)
 
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters())
 
-num_epochs = 30
-for epoch in range(1, num_epochs + 1):
+for epoch in range(1, config['num_epochs'] + 1):
     train(epoch)
 
 torch.save(model.state_dict(), 'model/cnn_dict.model')
