@@ -28,7 +28,7 @@ config = {
 dataset_dir = 'dataset/flower_images/'
 label_file= 'dataset/flower_images/flower_labels.csv'
 
-test_set = MyDataset(label_file, dataset_dir)
+test_set = MyDataset(config['label_file'], config['dataset_dir'])
 test_loader = DataLoader(test_set, batch_size=config['batch_size'], shuffle=True)
 
 #model = make_model('inception_v3', num_classes=config['num_classes'], input_size=(224, 224))
