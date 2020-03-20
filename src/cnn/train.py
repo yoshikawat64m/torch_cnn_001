@@ -3,9 +3,6 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 
-from cnn_finetune import make_model
-from keras.datasets import fashion_mnist
-
 import datetime
 import matplotlib.pyplot as plt
 import os
@@ -14,10 +11,11 @@ from MyDataset import MyDataset
 
 from inception import inception_v3
 
+
 def train(epoch):
     total_loss = 0
     total_size = 0
-    #import pdb; pdb.set_trace()
+    # import pdb; pdb.set_trace()
 
     model.train()
 
@@ -41,14 +39,15 @@ def train(epoch):
                 epoch, batch_idx * len(data), len(train_loader.dataset),
                 100 * batch_idx / len(train_loader), total_loss / total_size))
 
+
 config = {
     'dataset_dir': 'dataset/flower_images/',
     'label_file': 'dataset/flower_images/flower_labels.csv',
     'num_classes': 10,
     'batch_size': 70,
-    'num_epochs':30,
-    'pretrained':False,
-    'input_size':299,
+    'num_epochs': 30,
+    'pretrained': False,
+    'input_size': 299,
 }
 
 train_set = MyDataset(config['label_file'], config['dataset_dir'], size=config['input_size'])
@@ -56,9 +55,7 @@ train_loader = torch.utils.data.DataLoader(train_set, batch_size=config['batch_s
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-#model = make_model('inception_v3', num_classes=10, pretrained=True, input_size=(224, 224))
-
-model = inception_v3(pretrained=config['pretrained'], 
+model = inception_v3(pretrained=config['pretrained'],
                      num_classes=config['num_classes'],
                      transform_input=True).to(device)
 

@@ -44,7 +44,7 @@ def main():
 
     # our dataset has two classes only - background and person
     num_classes = 2
-    
+
     # use our dataset and defined transformations
     dataset = PennFudanDataset('dataset/PennFudanPed', get_transform(train=True))
     dataset_test = PennFudanDataset('dataset/PennFudanPed', get_transform(train=False))

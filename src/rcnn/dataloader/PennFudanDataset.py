@@ -8,25 +8,22 @@ class PennFudanDataset(object):
     def __init__(self, root, transforms):
         self.root = root
         self.transforms = transforms
+
         # load all image files, sorting them to
-        # ensure that they are aligned
         self.imgs = list(sorted(os.listdir(os.path.join(root, "PNGImages"))))
         self.masks = list(sorted(os.listdir(os.path.join(root, "PedMasks"))))
 
     def __getitem__(self, idx):
+
         # load images ad masks
         img_path = os.path.join(self.root, "PNGImages", self.imgs[idx])
         mask_path = os.path.join(self.root, "PedMasks", self.masks[idx])
         img = Image.open(img_path).convert("RGB")
-        # note that we haven't converted the mask to RGB,
-        # because each color corresponds to a different instance
-        # with 0 being background
         mask = Image.open(mask_path)
-        # convert the PIL Image into a numpy array
         mask = np.array(mask)
+
         # instances are encoded as different colors
         obj_ids = np.unique(mask)
-        # first id is the background, so remove it
         obj_ids = obj_ids[1:]
 
         # split the color-encoded mask into a set
@@ -52,6 +49,7 @@ class PennFudanDataset(object):
 
         image_id = torch.tensor([idx])
         area = (boxes[:, 3] - boxes[:, 1]) * (boxes[:, 2] - boxes[:, 0])
+
         # suppose all instances are not crowd
         iscrowd = torch.zeros((num_objs,), dtype=torch.int64)
 

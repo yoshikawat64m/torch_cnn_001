@@ -1,5 +1,4 @@
 from torch.utils.data import Dataset
-import torchvision
 from torchvision import transforms
 from PIL import Image
 import pandas as pd
@@ -14,9 +13,12 @@ class MyDataset(Dataset):
         self.image_files = dataset_df.iloc[:, 0]
         self.labels = dataset_df.iloc[:, 1]
         self.transform = transforms.Compose([
-        transforms.Resize(size),
-        transforms.ToTensor(),
-        transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+            transforms.Resize(size),
+            transforms.ToTensor(),
+            transforms.Normalize(
+                mean=[0.485, 0.456, 0.406],
+                std=[0.229, 0.224, 0.225]
+            )
         ])
 
     def __len__(self):
@@ -27,5 +29,5 @@ class MyDataset(Dataset):
         label = int(self.labels[idx])
 
         image = self.transform(image.convert('RGB'))
-        
+
         return image, label
