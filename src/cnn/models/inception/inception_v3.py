@@ -108,49 +108,42 @@ class InceptionV3(nn.Module):
             x = torch.cat((x_ch0, x_ch1, x_ch2), 1)
 
         # (N, 3, 299, 299)
-        x = self.Conv2d_1a_3x3(x)  # -> (N, 32, 149, 149)
-        x = self.Conv2d_2a_3x3(x)  # -> (N, 32, 147, 147)
-        x = self.Conv2d_2b_3x3(x)  # -> (N, 64, 147, 147)
-        x = F.max_pool2d(x, kernel_size=3, stride=2)
+        x = self.Conv2d_1a_3x3(x)                     # => (N, 32, 149, 149)
+        x = self.Conv2d_2a_3x3(x)                     # => (N, 32, 147, 147)
+        x = self.Conv2d_2b_3x3(x)                     # => (N, 64, 147, 147)
+        x = F.max_pool2d(x, kernel_size=3, stride=2)  # => (N, 64, 73, 73)
 
         # (N, 64, 73, 73)
-        x = self.Conv2d_3b_1x1(x)  # -> (N, 80, 73, 73)
-        x = self.Conv2d_4a_3x3(x)  # -> (N, 192, 71, 71)
-        x = F.max_pool2d(x, kernel_size=3, stride=2)
+        x = self.Conv2d_3b_1x1(x)                     # => (N, 80, 73, 73)
+        x = self.Conv2d_4a_3x3(x)                     # => (N, 192, 71, 71)
+        x = F.max_pool2d(x, kernel_size=3, stride=2)  # => (N, 192, 35, 35)
 
         # (N, 192, 35, 35)
-        x = self.Mixed_5b(x)  # -> (N, 256, 35, 35)
-        x = self.Mixed_5c(x)  # -> (N, 288, 35, 35)
-        x = self.Mixed_5d(x)  # -> (N, 288, 35, 35)
-        x = self.Mixed_6a(x)  # -> (N, 768, 17, 17)
-        x = self.Mixed_6b(x)  # -> (N, 768, 17, 17)
-        x = self.Mixed_6c(x)  # -> (N, 768, 17, 17)
-        x = self.Mixed_6d(x)  # -> (N, 768, 17, 17)
-        x = self.Mixed_6e(x)
+        x = self.Mixed_5b(x)  # => (N, 256, 35, 35)
+        x = self.Mixed_5c(x)  # => (N, 288, 35, 35)
+        x = self.Mixed_5d(x)  # => (N, 288, 35, 35)
+        x = self.Mixed_6a(x)  # => (N, 768, 17, 17)
+        x = self.Mixed_6b(x)  # => (N, 768, 17, 17)
+        x = self.Mixed_6c(x)  # => (N, 768, 17, 17)
+        x = self.Mixed_6d(x)  # => (N, 768, 17, 17)
+        x = self.Mixed_6e(x)  # => (N, 768, 17, 17)
 
-        # (N, 768, 17, 17)
         if self.training and self.aux_logits:
             aux = self.AuxLogits(x)
 
         # (N, 768, 17, 17)
-        x = self.Mixed_7a(x)  # -> (N, 1280, 8, 8)
-        x = self.Mixed_7b(x)  # -> (N, 2048, 8, 8)
-        x = self.Mixed_7c(x)
-
-        # (N, 2048, 8, 8)
-        x = F.adaptive_avg_pool2d(x, (1, 1))
-
-        # (N, 2048, 1, 1)
-        x = F.dropout(x, training=self.training)
+        x = self.Mixed_7a(x)                      # => (N, 1280, 8, 8)
+        x = self.Mixed_7b(x)                      # => (N, 2048, 8, 8)
+        x = self.Mixed_7c(x)                      # => (N, 2048, 8, 8)
+        x = F.adaptive_avg_pool2d(x, (1, 1))      # => (N, 2048, 8, 8)
+        x = F.dropout(x, training=self.training)  # => (N, 2048, 8, 8)
+        x = x.view(x.size(0), -1)                 # => (N, 2048, 1, 1)
 
         # (N, 2048, 1, 1)
-        x = x.view(x.size(0), -1)
+        x = self.fc(x)                            # => (N, 1000)
 
-        # (N, 2048)
-        x = self.fc(x)
-
-        # (N, 1000) (num_classes)
         if self.training and self.aux_logits:
             return _InceptionOuputs(x, aux)
 
+        # (N, 1000)
         return x
