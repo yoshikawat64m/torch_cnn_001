@@ -189,18 +189,15 @@ class InceptionAux(nn.Module):
         self.fc.stddev = 0.001
 
     def forward(self, x):
-        # N x 768 x 17 x 17
-        x = F.avg_pool2d(x, kernel_size=5, stride=3)
-        # N x 768 x 5 x 5
-        x = self.conv0(x)
-        # N x 128 x 5 x 5
-        x = self.conv1(x)
-        # N x 768 x 1 x 1
-        # Adaptive average pooling
-        x = F.adaptive_avg_pool2d(x, (1, 1))
-        # N x 768 x 1 x 1
-        x = x.view(x.size(0), -1)
-        # N x 768
-        x = self.fc(x)
-        # N x 1000
+        # (N, 768, 17, 17)
+        x = F.avg_pool2d(x, kernel_size=5, stride=3)  # => (N, 768, 5, 5)
+        x = self.conv0(x)                             # => (N, 128, 5, 5)
+        x = self.conv1(x)                             # => (N, 768, 1, 1)
+
+        # (N, 768, 1, 1)
+        x = F.adaptive_avg_pool2d(x, (1, 1))  # => (N, 768, 1, 1)
+        x = x.view(x.size(0), -1)             # => (N, 768)
+        x = self.fc(x)                        # => (N, 1000)
+
+        # (N, 1000)
         return x
