@@ -7,11 +7,11 @@ import os
 
 class MyDataset(Dataset):
 
-    def __init__(self, csv_path, root_dir, size=224):
-        dataset_df = pd.read_csv(csv_path)
-        self.root_dir = root_dir
-        self.image_files = dataset_df.iloc[:, 0]
-        self.labels = dataset_df.iloc[:, 1]
+    def __init__(self, label_file, image_dir, size=224):
+        label_df = pd.read_csv(label_file)
+        self.image_dir = image_dir
+        self.image_files = label_df.iloc[:, 0]
+        self.labels = label_df.iloc[:, 1]
         self.transform = transforms.Compose([
             transforms.Resize(size),
             transforms.ToTensor(),
@@ -25,7 +25,7 @@ class MyDataset(Dataset):
         return len(self.image_files)
 
     def __getitem__(self, idx):
-        image = Image.open(os.path.join(self.root_dir, self.image_files[idx]))
+        image = Image.open(os.path.join(self.image_dir, self.image_files[idx]))
         label = int(self.labels[idx])
 
         image = self.transform(image.convert('RGB'))
