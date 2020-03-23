@@ -3,6 +3,15 @@ import torch.nn.functional as F
 
 from util.functions import flatten
 
+__all__ = ['AlexNet', 'alexnet']
+
+
+def alexnet(pretrained=False, **params):
+    if pretrained:
+        model = AlexNet(**params)
+        return model
+    return AlexNet(**params)
+
 
 class AlexNet(nn.Module):
 
@@ -34,8 +43,7 @@ class AlexNet(nn.Module):
         x = F.relu(self.conv3(x))   # => (N, 384, 13, 13)
         x = F.relu(self.conv4(x))   # => (N, 256, 13, 13)
         x = self.max_pool3(x)       # => (N, 256, 6, 6)
-
-        x = flatten(x)         # => (N, 9216)
+        x = flatten(x)              # => (N, 9216)
 
         # (N, 9216)
         x = F.relu(self.fc1(x))     # => (N, 4096)
