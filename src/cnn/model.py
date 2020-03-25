@@ -13,9 +13,9 @@ from models import *
 
 
 class Config:
-    image_dir = 'dataset/flower_images/'
-    train_label = 'dataset/flower_images/flower_labels.csv'
-    test_label = 'dataset/flower_images/flower_labels.csv'
+    image_dir = 'datasets/flower_images/'
+    train_label = 'datasets/flower_images/flower_labels.csv'
+    test_label = 'datasets/flower_images/flower_labels.csv'
 
     model = 'inception_v3'
     model_state = 'models/inception/model/inception_v3.model'
@@ -28,7 +28,7 @@ class Config:
     pretrained = False
 
 
-class TrainTestModel:
+class Model:
 
     def __init__(self, mode='train'):
         if torch.cuda.is_available():
@@ -73,7 +73,25 @@ class TrainTestModel:
         self.criterion = nn.CrossEntropyLoss()
 
         for epoch in range(1, self.config.num_epochs + 1):
-            self._train_one_epoch(epoch)
+            self.total_loss = 0
+            self.total_size = 0
+
+            for batch_i, (data, target) in enumerate(self.data_loader):
+                data = data.to(self.device)
+                target = target.to(self.device)
+
+                output = self.model(data)
+                loss = self.criterion(output[0], target)
+
+                self.total_loss += loss.item()
+                self.total_size += data.size(0)
+
+                self.optimizer.zero_grad()
+                loss.backward()
+                self.optimizer.step()
+
+                if batch_i % 1000 == 0:
+                    self._output_train_result(epoch, batch_i)
 
         torch.save(self.model, self.config.model_state)
         torch.save(self.model.state_dict(), self.config.model_state_dict)
@@ -92,34 +110,13 @@ class TrainTestModel:
 
         print(classification_report(answers, predictions))
 
-    def _train_one_epoch(self, epoch):
-        total_loss = 0
-        total_size = 0
-
-        for batch_i, (data, target) in enumerate(self.data_loader):
-            data = data.to(self.device)
-            target = target.to(self.device)
-
-            output = self.model(data)
-            loss = self.criterion(output[0], target)
-
-            total_loss += loss.item()
-            total_size += data.size(0)
-
-            self.optimizer.zero_grad()
-            loss.backward()
-            self.optimizer.step()
-
-            if batch_i % 1000 == 0:
-                self._output_train_result(epoch, batch_i, total_loss, total_size)
-
-    def _output_train_result(self, epoch, batch_i, total_loss, total_size):
+    def _output_train_result(self, epoch, batch_i):
         now = datetime.datetime.now()
         print('[{}] Train Epoch: {} [{}/{} ({:.0f}%)]\tAverage loss: {:.6f}'.format(
             now,
             epoch,
-            batch_i * len(self.data),
+            self.total_size,
             len(self.data_loader.dataset),
             100 * batch_i / len(self.data_loader),
-            total_loss / total_size
+            self.total_loss / self.total_size
         ))
