@@ -22,8 +22,9 @@ class Config:
     model_state_dict = 'model/inception/model/inception_v3_dict.model'
     input_size = 299
     num_classes = 10
-    batch_size = 70
+    batch_size = 50
     num_epochs = 30
+    per_out = 100
 
     pretrained = False
 
@@ -90,7 +91,7 @@ class Model:
                 loss.backward()
                 self.optimizer.step()
 
-                if batch_i % 1000 == 0:
+                if batch_i % self.config.per_out == 0:
                     self._output_train_result(epoch, batch_i)
 
         torch.save(self.model, self.config.model_state)

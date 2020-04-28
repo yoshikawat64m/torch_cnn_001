@@ -5,10 +5,7 @@ from dataloader.PennFudanDataset import PennFudanDataset
 from torchvision.models.detection.faster_rcnn import FastRCNNPredictor
 from torchvision.models.detection.mask_rcnn import MaskRCNNPredictor
 import torchvision
-from torchvision.models.detection import FasterRCNN
 from torchvision.models.detection.rpn import AnchorGenerator
-import torchvision
-from torchvision.models.detection.faster_rcnn import FastRCNNPredictor
 import torch
 
 
@@ -82,14 +79,12 @@ def main():
     num_epochs = 10
 
     for epoch in range(num_epochs):
-        # train for one epoch, printing every 10 iterations
         train_one_epoch(model, optimizer, data_loader, device, epoch, print_freq=10)
-        # update the learning rate
         lr_scheduler.step()
-        # evaluate on the test dataset
         evaluate(model, data_loader_test, device=device)
 
     print("That's it!")
+
 
 if __name__ == '__main__':
     main()
